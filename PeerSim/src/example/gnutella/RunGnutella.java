@@ -1,5 +1,6 @@
 package example.gnutella;
 
+
 import java.util.*;
 
 public class RunGnutella {
@@ -15,8 +16,17 @@ public class RunGnutella {
 		double averageHops=0.0;
 		Files file = new Files();
 
+		System.out.println(file.FileName);
 		//make new graph
 		GenerateGraph TestGraph = new GenerateGraph();
+
+		Scanner reader = new Scanner(System.in);
+		int method;
+
+		System.out.println("Enter a search method: ");
+		method = Integer.parseInt(reader.next());
+
+
 
 		//How many times to test the system
 		for(int i=0; i<10000; i++){
@@ -37,6 +47,17 @@ public class RunGnutella {
 
 			}
 
+			switch(method) {
+			case 1: tempReturn = TestGraph.graph.get(start).Flood(TestGraph.graph.get(start).GenerateQuery(file));
+			break;
+
+			case 2: tempReturn = TestGraph.graph.get(start).RandomWalk(TestGraph.graph.get(start).GenerateQuery(file));
+			break;
+
+			case 3: tempReturn = TestGraph.graph.get(start).RandomWalkWithNeighborTable(TestGraph.graph.get(start).GenerateQuery(file));
+			break;
+			}
+
 			//take down start time
 			startTime = System.currentTimeMillis();
 
@@ -48,12 +69,9 @@ public class RunGnutella {
 			 * 
 			 * */
 
-			
 
 
-		       //tempReturn = TestGraph.graph.get(start).Flood(TestGraph.graph.get(start).GenerateQuery(file));
-		       //tempReturn = TestGraph.graph.get(start).RandomWalk(TestGraph.graph.get(start).GenerateQuery(file));
-			tempReturn = TestGraph.graph.get(start).RandomWalkWithNeighborTable(TestGraph.graph.get(start).GenerateQuery(file));
+
 			//take down search end time
 			stopTime = System.currentTimeMillis();
 
