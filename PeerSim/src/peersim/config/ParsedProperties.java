@@ -23,7 +23,7 @@ import java.util.*;
 
 /**
 * Extends the class {@link ConfigProperties} with basic parsing capabilities.
-* @see #load
+* @see #fileQuota
 */
 public class ParsedProperties extends ConfigProperties {
 

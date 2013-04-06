@@ -217,7 +217,7 @@ import java.util.*;
  * For the sake of completeness, we mention it here that if this class is
  * initialized using {@link ParsedProperties}, then it is possible to use
  * some more compressed format to specify the components. See
- * {@link ParsedProperties#load}.
+ * {@link ParsedProperties#fileQuota}.
  * 
  */
 public class Configuration

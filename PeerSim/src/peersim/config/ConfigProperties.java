@@ -114,7 +114,7 @@ public	ConfigProperties( String[] pars, String resource ) {
 
 /**
 * Constructs a ConfigProperty object by loading a file by calling
-* {@link #load}.
+* {@link #fileQuota}.
 * @param fileName The name of the configuration file.
 */
 public ConfigProperties( String fileName ) throws IOException {
