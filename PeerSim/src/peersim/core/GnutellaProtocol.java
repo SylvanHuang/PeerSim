@@ -1,6 +1,6 @@
 package peersim.core;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
@@ -31,6 +31,12 @@ public class GnutellaProtocol extends SingleValueHolder implements CDProtocol, L
 	 * @config
 	 */
 	private static final String PAR_INITCAP = "capacity";
+	
+	/**
+	 * Max Load. Defaults to {@value #DEFAULT_INITIAL_CAPACITY}.
+	 * @config
+	 */	
+	private static final int MAX_LOAD = 100;
 
 	// --------------------------------------------------------------------------
 	// Fields
@@ -39,7 +45,7 @@ public class GnutellaProtocol extends SingleValueHolder implements CDProtocol, L
 	protected Node[] neighbors;						// Neighbors
 	protected int len;								// Actual number of neighbors in the array
 	protected double fileQuota;						// Amount of bandwidth that can be transferred in each cycle
-	public HashMap<UUID, Integer> fileMap;  		// Hash with key=unique ID, value = filesize in MB
+	public ArrayList<GnuFile> fileList;  			// File objects have id, size, requests
 	protected int numFiles;							// Number of files for each node to carry
 
 	// --------------------------------------------------------------------------
@@ -54,7 +60,8 @@ public class GnutellaProtocol extends SingleValueHolder implements CDProtocol, L
 //		len = 0;
 //		createFileMap();
 //		fileQuota = 30;
-		fileMap = new HashMap<UUID, Integer>();
+		numFiles = 20;
+		fileList = new ArrayList<GnuFile>();
 	}
 
 	//--------------------------------------------------------------------------
@@ -179,40 +186,31 @@ public class GnutellaProtocol extends SingleValueHolder implements CDProtocol, L
 	}
 	
 	public void replicateFile(GnutellaProtocol neighbor) {
-		double currentLoad = this.value;
-		double neighborLoad = neighbor.value;
-		// TODO: finishing implementing file transfer		
-		HashMap<UUID, Integer> randomFile = getRandomFile();
+		// TODO: finishing implementing file transfer
+		GnuFile randomFile = getRandomFile();
+		neighbor.fileList.add(randomFile);
+		if (this.value < MAX_LOAD && neighbor.value < MAX_LOAD) {
+			this.value += randomFile.size;
+			neighbor.value += randomFile.size;
+		}		
+	}
+	
+	public  void requestFile() {
 		
-				
 	}
 	
-	private HashMap<UUID, Integer> getRandomFile() {
+	public GnuFile getRandomFile() {
 		Random generator = new Random();
-		Object[] values = fileMap.values().toArray();
-		Object[] keys = fileMap.keySet().toArray();
-		Integer fileSize = (Integer) values[generator.nextInt(values.length)];
-		UUID fileID = (UUID) values[generator.nextInt(keys.length)];
-		HashMap<UUID, Integer> randomFile = new HashMap<UUID, Integer>();
-		randomFile.put(fileID, fileSize);
-		return randomFile;
-	}
-	
-	/** 
-	 * 
-	 * @param fileID - UUID of file to add
-	 * @param fileSize - Integer file size in MB
-	 */
-	public void addFile(UUID fileID, Integer fileSize) {
-		fileMap.put(fileID, fileSize);
+		return fileList.get(generator.nextInt(fileList.size()));
 	}
 	
 	public void createFileMap() {
 		for (int i = 0; i < numFiles; i++) {
 			UUID fileID = UUID.randomUUID();
 			int fileSize = (int) Math.floor(Math.random() * 1000 + 1);	// Max filesize for transfer = 1GB, min = 1MB
-			System.out.println("UUID: " + fileID.toString() + " File size: " + fileSize);
-			fileMap.put(fileID, fileSize);
+			//System.out.println("UUID: " + fileID.toString() + " File size: " + fileSize);
+			GnuFile newFile = new GnuFile(fileID, fileSize);
+			fileList.add(newFile);
 		}
 	}
 
