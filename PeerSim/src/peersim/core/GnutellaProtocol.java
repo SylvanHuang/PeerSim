@@ -40,7 +40,7 @@ public class GnutellaProtocol extends SingleValueHolder implements CDProtocol, L
 	protected int len;								// Actual number of neighbors in the array
 	protected double fileQuota;						// Amount of bandwidth that can be transferred in each cycle
 	public HashMap<UUID, Integer> fileMap;  		// Hash with key=unique ID, value = filesize in MB
-	protected int numFiles;							// Number of files for each node to carry
+	protected int numFiles = 5;							// Number of files for each node to carry
 
 	// --------------------------------------------------------------------------
 	// Initialization
